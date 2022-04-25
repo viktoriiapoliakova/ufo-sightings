@@ -1,0 +1,77 @@
+---
+title: "UFO SIGHTINGS"
+---
+
+```{r}
+install.packages("countrycode")
+install.packages("openintro")
+install.packages("hms")
+install.packages("chron")
+install.packages("lubridate")
+install.packages("magrittr")
+```
+
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(countrycode)
+library(tidyr)
+library(openintro)
+library(chron)
+library(lubridate)
+library(magrittr)
+
+```
+
+
+```{r}
+setwd("~/Desktop/EMLYON/R - EMLYON")                  
+ufo <- read_csv("scrubbed.csv") 
+ufo <- ufo %>% na.omit()
+ufo <- data.frame(ufo)                          
+ufo <- as_tibble(ufo)                           
+```
+
+
+```{r}
+ufo <- ufo%>%
+  separate(datetime, c("date", "time"), sep = " ") %>%
+  mutate(shape = as.factor(shape),
+         date = as.factor(date)) %>%
+  mutate(date=as.Date(date, format = "%m/%d/%Y", origin = "1970-01-01"))
+ufo$state <- abbr2state(ufo$state)
+ufo <- ufo%>%
+  mutate(country = toupper(country)) %>%
+  mutate(city = str_to_title(city)) %>%
+  mutate(shape = str_to_title(shape)) %>%
+  mutate(country = countrycode(country, origin="iso2c", destination="country.name"))%>%
+  rename(duration_seconds = duration..seconds.,
+         ufo_shape = shape) %>%
+  mutate(duration_minutes = as.numeric(as.character(duration_seconds/60))) %>%
+  mutate(state = as.factor(state),
+         city = as.factor(city),
+         country = as.character(country)) %>%
+  filter(country == "United States") %>%
+  mutate(country = as.factor(country))
+ufo$duration_minutes <- round(ufo$duration_minutes, digit=1)
+ufo <- ufo%>%
+  select(date, time, city, state, country, ufo_shape, duration_minutes, comments, latitude, longitude)
+
+```
+
+````{r}
+head(ufo)
+```
+
+```{r}
+save(ufo, file = "ufo_my_project1.RData")
+```
+
+```{r}
+summary(ufo)
+```
+```{r}
+head(ufo)
+```
+
