@@ -1,0 +1,118 @@
+---
+title: "First Assignment: Coding with R & Shiny"
+author: "Viktoriia Poliakova"
+date: "February 6, 2021"
+output:
+  html_document:
+    theme: cerulean
+    toc: yes
+    number_sections: yes
+    toc_float:
+      collapsed: no
+---
+
+# Dataset choice
+
+The dataset I chose comes from Kaggle: https://www.kaggle.com/NUFORC/ufo-sightings. It contains data of over 80,000 reports of UFO sightings over the last century, collected by the National UFO Reporting Center (a US-based organization that investigates UFO sightings and reports of contact with UFO).
+
+There are two versions of this dataset published on Kaggle: scrubbed and complete. According to the owner of the dataset (National UFO Reporting Center (NUFORC)), _"the complete data includes entries where the location of the sighting was not found or blank (0.8146%) or have an erroneous or blank time (8.0237%)"_. I chose to work with the scrubbed dataset for more accurate results.
+
+The original dataset contains **80332 observations** and **12 variables**. The tidy version of the dataset contains **66516 observations** and **10 variables**. At first, I decided not to drop observations with NA values in this dataset. The reason was: there is only 1 NA value in the latitude column and and o in the longitude column, and I wanted to keep as many coordinates as possible to produce a proper analysis of locations where UFOs were spotted. However, after creating initial graphs, I understood that omitting NAs was desirable, because their presence spoiled the quality of my graphs.
+
+Below is the summary of my dataset with some simple statistics (_note: I suspect that the "time" column probably has a wrong data type, I couldn't figure out how to transform it in the best way. I shall improve this before starting my Shiny Application._)
+
+
+
+```{r}
+load("ufo_my_project1.RData")
+```
+
+```{r}
+summary(ufo)
+```
+
+# Why this dataset?
+
+While I'm not sure whether I find Unidentified Flying Objects & paranormal activity believable or not, I certainly find people's deep interest about them very fascinating. I thought that analyzing this kind of data would be fun and could lead to a lot of interesting insights about people's experiences and thoughts about UFOs and aliens. Most importantly: for me, data analysis is a lot about storytelling, and after the initial glimpse into the dataset, I saw an interesting narrative.
+
+**My main objective for my final project:** with my Shiny App, I want to take the user on an exciting visual journey to find out about UFO activity & people's experiences with them across the world.
+
+**My main objectives in terms of my learning outcomes:** 
+
+- I want to practice my R skills and be more fluent in the syntax.
+- I want to improve my analytical and abstract thinking skills.
+- I want to get better at decomposing problems into smaller manageable chunks.
+- I want to learn and practice the skill of data storytelling.
+- I want to learn more about creating web applications.
+
+**Some questions I intent to ask with my analysis:**
+
+- In which parts of the world have people reported the most UFO activity?
+- How do the sightings vary by year, month, and day of the week? 
+- What is the most common UFO shape observed?
+- What is the distribution of the most common shapes across countries?
+- At what time of the day have most people observed UFOs?
+- Is the observed UFO shape connected with people's locations, year of the sighting, or any other factors?
+- What are the most common words people describe their UFO encounters with?
+- How do people feel when they see UFO? Are they scared, excited, suprised, etc? (_I'd love to do some sentiment analysis, if possible._)
+
+More questions to come as I explore the dataset in greater depth.
+
+
+
+# Early graphs
+
+
+```{r}
+library(tidyverse)
+```
+
+
+
+```{r}
+ufo_by_country <- ufo %>%
+  group_by(country) %>%
+  summarize(Total = n()) %>%
+  arrange(desc(Total))
+
+ggplot(head(ufo_by_country)) + geom_col(aes(reorder(country, Total), Total)) + labs(title="Countries with most reported UFO sightings", x="Countries", y="")
+
+```
+
+
+
+```{r}
+ufo_by_state <-ufo %>%
+  group_by(state) %>%
+  summarize(Total=n())
+ggplot(head(ufo_by_state,5)) + geom_col(aes(reorder(state, -Total), Total)) + labs(title=" Top 5 USA states with most reported UFO sightings", x="States", y="")
+```
+
+```{r}
+ufo_by_city <-ufo %>%
+  group_by(city) %>%
+  summarize(Total=n()) %>%
+  arrange(desc(Total)) 
+
+ggplot(head(ufo_by_city,10)) + geom_col(aes(reorder(city, -Total), Total)) + labs(title=" Top 10 cities with most reported UFO sightings", x="Cities", y="")
+```
+
+
+
+```{r}
+ufo_by_shape <-ufo %>%
+  group_by(ufo_shape) %>%
+  summarize(Total=n()) %>%
+  arrange(desc(Total)) 
+
+ggplot(head(ufo_by_shape)) + geom_col(aes(reorder(ufo_shape, -Total), Total)) + labs(title="Most common UFO shapes", x="Shapes", y="")
+```
+
+
+# App sketch
+
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./sketch.png')
+```
+```
+
