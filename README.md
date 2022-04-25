@@ -9,3 +9,5 @@ The original dataset contains 80332 observations and 12 variables. The tidy vers
 While I’m not sure whether I find Unidentified Flying Objects & paranormal activity believable, I certainly find people’s deep interest about them very fascinating. I thought that analyzing this kind of data would be fun and could lead to a lot of interesting insights about people’s experiences and thoughts about UFOs and aliens. Most importantly: for me, data analysis is a lot about storytelling, and after the initial glimpse into the dataset, I saw an interesting narrative.
 
 My main objective for this project was: with my Shiny App, I wanted to take the user on a journey to find out about UFO activity & people’s experiences with them across the world.
+
+The deployed app can be found here: https://viktoriiapoliakova.shinyapps.io/UFO_Sightings/
