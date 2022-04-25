@@ -1,4 +1,4 @@
-Welcome to my project exploring the UFO sightings in the USA using R & Shiny.
+Welcome to my project exploring UFO sightings in the USA using R & Shiny.
 
 The dataset I chose comes from Kaggle: https://www.kaggle.com/NUFORC/ufo-sightings. It contains data of over 80,000 reports of UFO sightings over the last century, collected by the National UFO Reporting Center (a US-based organization that investigates UFO sightings and reports of contact with UFO).
 
